@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Clinic Notes · Medical research assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF1EE; --surface:#F8FAF8; --ink:#12231F; --muted:#5B6B66; --line:#CFD9D4;
+  --pine:#0E5A4B; --pine-ink:#F3FAF7; --pulse:#E4572E; --tint:#DDE8E3;
+  --serif:'Instrument Serif',Georgia,'Times New Roman',serif;
+  --sans:'Figtree',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+:root[data-theme="dark"]{
+  --paper:#0D1714; --surface:#14221E; --ink:#E6EFEA; --muted:#93A59E; --line:#26382F;
+  --pine:#5FD3B0; --pine-ink:#07241C; --pulse:#FF7A52; --tint:#1B2E28;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0D1714; --surface:#14221E; --ink:#E6EFEA; --muted:#93A59E; --line:#26382F;
+    --pine:#5FD3B0; --pine-ink:#07241C; --pulse:#FF7A52; --tint:#1B2E28;
+  }
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font:16px/1.6 var(--sans);-webkit-font-smoothing:antialiased;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--pine);outline-offset:2px;border-radius:6px}
+textarea:focus-visible{outline:none}
+
+.app{display:grid;grid-template-columns:clamp(260px,22vw,360px) minmax(0,1fr);height:100vh;height:100dvh;width:100%}
+
+/* Rail */
+.rail{padding:36px 28px;min-width:0;display:flex;flex-direction:column;gap:28px;border-right:1px solid var(--line);overflow-y:auto}
+.brand h1{font:400 40px/1 var(--serif);letter-spacing:-.01em}
+.brand p{color:var(--muted);font-size:14px;margin-top:10px;max-width:24ch}
+.pulse{display:block;width:100%;height:34px;margin-top:18px}
+.pulse path{fill:none;stroke:var(--pulse);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:320;stroke-dashoffset:320;animation:draw 2.2s .2s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.rail h2{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:10px}
+.asks{display:flex;flex-direction:column;gap:8px}
+.ask{text-align:left;background:transparent;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+  cursor:pointer;font-size:14px;line-height:1.4;transition:background .15s,border-color .15s}
+.ask:hover{background:var(--tint);border-color:var(--pine)}
+.rail-foot{margin-top:auto;display:flex;flex-direction:column;gap:10px}
+.ghost{background:none;border:1px solid var(--line);border-radius:10px;padding:9px 12px;cursor:pointer;font-size:14px;text-align:left}
+.ghost:hover{border-color:var(--pine);background:var(--tint)}
+.note{font-size:12.5px;color:var(--muted);line-height:1.5}
+
+/* Main */
+.main{display:flex;flex-direction:column;min-width:0;height:100%}
+.feed{flex:1;overflow-y:auto;padding:40px clamp(20px,4vw,64px) 16px;scroll-behavior:smooth}
+.col{max-width:880px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+
+.welcome h2{font:400 clamp(34px,5vw,52px)/1.05 var(--serif);letter-spacing:-.015em;max-width:15ch}
+.welcome p{color:var(--muted);margin-top:16px;max-width:52ch}
+
+.q{align-self:flex-end;max-width:85%;background:var(--pine);color:var(--pine-ink);padding:11px 16px;
+  border-radius:18px 18px 4px 18px;white-space:pre-wrap;overflow-wrap:anywhere}
+
+.a{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--pine);
+  border-radius:4px 14px 14px 4px;padding:22px 26px 18px}
+.a-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;color:var(--muted);font-size:13px}
+.copy{background:none;border:0;cursor:pointer;color:var(--muted);font-size:13px;padding:2px 6px;border-radius:6px}
+.copy:hover{color:var(--ink);background:var(--tint)}
+.prose{font-size:16.5px;line-height:1.7;overflow-wrap:anywhere}
+.prose>*+*{margin-top:12px}
+.prose h1,.prose h2,.prose h3,.prose h4{font:400 24px/1.2 var(--serif);margin-top:22px;letter-spacing:-.005em}
+.prose h3,.prose h4{font-size:20px}
+.prose ul,.prose ol{padding-left:22px}
+.prose li+li{margin-top:5px}
+.prose li::marker{color:var(--pine)}
+.prose strong{font-weight:600}
+.prose code{background:var(--tint);padding:1px 6px;border-radius:5px;font-size:.9em}
+.prose .tw{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+.prose table{border-collapse:collapse;width:100%;font-size:14.5px;line-height:1.5}
+.prose th,.prose td{padding:9px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--line)}
+.prose th{background:var(--tint);font-weight:600}
+.prose tr:last-child td{border-bottom:0}
+.disc{margin-top:18px;padding-top:12px;border-top:1px dashed var(--line);font-size:12.5px;color:var(--muted);line-height:1.5}
+
+.err{border-left-color:var(--pulse)}
+.err .prose strong{color:var(--pulse)}
+
+.think{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:14px}
+.ecg{width:90px;height:28px;overflow:hidden}
+.ecg svg{width:180px;height:28px;animation:scroll 1.3s linear infinite}
+.ecg path{fill:none;stroke:var(--pulse);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@keyframes scroll{to{transform:translateX(-90px)}}
+
+/* Composer */
+.composer-wrap{padding:8px clamp(20px,4vw,64px) 22px}
+.composer{max-width:880px;margin:0 auto;background:var(--surface);border:1px solid var(--line);border-radius:16px;
+  padding:10px 10px 10px 18px;display:flex;gap:10px;align-items:flex-end;transition:border-color .15s}
+.composer:focus-within{border-color:var(--pine)}
+textarea{flex:1;border:0;background:none;resize:none;outline:none;padding:8px 0;max-height:160px;line-height:1.5}
+textarea::placeholder{color:var(--muted)}
+.send{background:var(--pine);color:var(--pine-ink);border:0;border-radius:11px;padding:10px 18px;font-weight:600;cursor:pointer;
+  transition:opacity .15s,transform .1s}
+.send:hover:not(:disabled){opacity:.9}.send:active:not(:disabled){transform:scale(.97)}
+.send:disabled{opacity:.35;cursor:not-allowed}
+.meta{max-width:880px;margin:8px auto 0;display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted)}
+.meta .over{color:var(--pulse)}
+
+@media (max-width:820px){
+  .app{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr)}
+  .rail{padding:16px 20px;border-right:0;border-bottom:1px solid var(--line);flex-direction:row;align-items:center;gap:12px;overflow:visible}
+  .brand h1{font-size:28px}.brand p,.pulse,.asks-box,.note{display:none}
+  .rail-foot{margin:0 0 0 auto;flex-direction:row}
+  .feed{padding:24px 18px 8px}.composer-wrap{padding:8px 14px 14px}
+  .a{padding:18px 18px 14px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important}
+  .pulse path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="rail">
+    <div class="brand">
+      <h1>Clinic Notes</h1>
+      <p>Plain-language medical research from live web sources.</p>
+      <svg class="pulse" viewBox="0 0 240 34" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 18 H70 L80 18 L88 4 L98 30 L106 12 L112 18 H240"/>
+      </svg>
+    </div>
+    <div class="asks-box">
+      <h2>Try asking</h2>
+      <div class="asks" id="asks"></div>
+    </div>
+    <div class="rail-foot">
+      <button class="ghost" id="newChat">New conversation</button>
+      <button class="ghost" id="theme">Switch theme</button>
+      <p class="note">General information only. This is not a diagnosis or treatment plan. See a licensed clinician for personal medical advice.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <div class="feed" id="feed" aria-live="polite">
+      <div class="col" id="col">
+        <section class="welcome" id="welcome">
+          <h2>What would you like to understand?</h2>
+          <p>Ask about a condition, symptom, medicine, or test. Each answer is built from fresh web results and organised into considerations and options you can take to your doctor.</p>
+        </section>
+      </div>
+    </div>
+    <div class="composer-wrap">
+      <div class="composer">
+        <textarea id="input" rows="1" maxlength="1000" placeholder="Ask a medical question" aria-label="Your question"></textarea>
+        <button class="send" id="send" disabled>Send</button>
+      </div>
+      <div class="meta"><span>Enter to send, Shift+Enter for a new line</span><span id="count">0 / 1000</span></div>
+    </div>
+  </main>
+</div>
+
+<script>
+const API_URL = "http://localhost:8000/api/v1/chat"; // change if your backend runs elsewhere
+const SUGGESTIONS = [
+  "What causes iron-deficiency anemia?",
+  "How is type 2 diabetes managed?",
+  "What are common side effects of statins?",
+  "When is a persistent cough worth testing?"
+];
+
+const $ = id => document.getElementById(id);
+const feed = $("feed"), col = $("col"), input = $("input"), send = $("send"), count = $("count");
+let busy = false;
+
+/* Theme */
+const root = document.documentElement;
+$("theme").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme:dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+};
+
+/* Suggestions */
+SUGGESTIONS.forEach(t => {
+  const b = document.createElement("button");
+  b.className = "ask"; b.textContent = t;
+  b.onclick = () => ask(t);
+  $("asks").appendChild(b);
+});
+
+/* Markdown (small, safe: escapes everything first) */
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const inline = s => esc(s)
+  .replace(/`([^`]+)`/g,"<code>$1</code>")
+  .replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>")
+  .replace(/(^|[^*])\*([^*\s][^*]*)\*/g,"$1<em>$2</em>");
+function md(src){
+  const lines = src.replace(/\r/g,"").split("\n"); let out = "", i = 0;
+  const cells = l => l.trim().replace(/^\||\|$/g,"").split("|").map(c => c.trim());
+  while(i < lines.length){
+    const l = lines[i];
+    if(!l.trim()){ i++; continue; }
+    let m;
+    if((m = l.match(/^(#{1,4})\s+(.*)/))){ const n = Math.min(m[1].length+1,4); out += `<h${n}>${inline(m[2])}</h${n}>`; i++; continue; }
+    if(/^\s*-{3,}\s*$/.test(l)){ i++; continue; }
+    if(l.includes("|") && /^\s*\|?\s*:?-{2,}/.test(lines[i+1]||"")){
+      const head = cells(l); i += 2; let rows = "";
+      while(i < lines.length && lines[i].includes("|")){ rows += "<tr>"+cells(lines[i]).map(c=>`<td>${inline(c)}</td>`).join("")+"</tr>"; i++; }
+      out += `<div class="tw"><table><thead><tr>${head.map(c=>`<th>${inline(c)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div>`; continue;
+    }
+    if(/^\s*([-*•]|\d+[.)])\s+/.test(l)){
+      const ord = /^\s*\d/.test(l); let items = "";
+      while(i < lines.length && /^\s*([-*•]|\d+[.)])\s+/.test(lines[i])){ items += `<li>${inline(lines[i].replace(/^\s*([-*•]|\d+[.)])\s+/,""))}</li>`; i++; }
+      out += ord ? `<ol>${items}</ol>` : `<ul>${items}</ul>`; continue;
+    }
+    let p = []; while(i < lines.length && lines[i].trim() && !/^(#{1,4}\s|\s*([-*•]|\d+[.)])\s)/.test(lines[i])){ p.push(lines[i]); i++; }
+    out += `<p>${inline(p.join(" "))}</p>`;
+  }
+  return out;
+}
+
+/* Rendering */
+const scrollDown = () => feed.scrollTo({top: feed.scrollHeight});
+function addQuestion(t){
+  const d = document.createElement("div"); d.className = "q"; d.textContent = t; col.appendChild(d); scrollDown();
+}
+function addThinking(){
+  const d = document.createElement("div"); d.className = "think";
+  d.innerHTML = `<div class="ecg"><svg viewBox="0 0 180 28"><path d="M0 14 H30 L36 14 L42 3 L50 25 L56 10 L60 14 H120 L126 14 L132 3 L140 25 L146 10 L150 14 H180"/></svg></div><span>Searching the web and reading sources</span>`;
+  col.appendChild(d); scrollDown(); return d;
+}
+function addAnswer(html, raw, disclaimer, isErr){
+  const d = document.createElement("article"); d.className = "a" + (isErr ? " err" : "");
+  d.innerHTML = `<div class="a-head"><span>${isErr ? "Could not complete the search" : "Research summary"}</span>${isErr ? "" : '<button class="copy">Copy</button>'}</div><div class="prose">${html}</div>${disclaimer ? `<p class="disc">${esc(disclaimer)}</p>` : ""}`;
+  const c = d.querySelector(".copy");
+  if(c) c.onclick = async () => { try{ await navigator.clipboard.writeText(raw); c.textContent = "Copied"; setTimeout(()=>c.textContent="Copy",1500);}catch{ c.textContent = "Copy failed"; } };
+  col.appendChild(d); scrollDown();
+}
+
+/* Chat */
+async function ask(text){
+  text = text.trim();
+  if(!text || busy) return;
+  busy = true; update();
+  $("welcome")?.remove();
+  addQuestion(text); input.value = ""; resize();
+  const t = addThinking();
+  try{
+    const r = await fetch(API_URL, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({message:text})});
+    const data = await r.json().catch(() => ({}));
+    t.remove();
+    if(!r.ok){
+      const why = r.status === 503 ? "The assistant is still starting up. Wait a few seconds and send again."
+        : r.status === 422 ? "The question was rejected. Keep it under 1,000 characters."
+        : "The server hit an error while researching. Try again, or rephrase the question.";
+      addAnswer(`<p><strong>Error ${r.status}.</strong> ${esc(why)}</p>`, "", "", true);
+    } else {
+      addAnswer(md(data.answer || "No answer was returned."), data.answer || "", data.compliance_disclaimer);
+    }
+  }catch(e){
+    t.remove();
+    addAnswer(`<p><strong>Cannot reach the backend.</strong> Check that it is running at <code>${esc(API_URL)}</code> and that this page is opened from an allowed origin (such as <code>http://localhost:3000</code>), not from a file.</p>`, "", "", true);
+  }
+  busy = false; update(); input.focus();
+}
+
+/* Composer */
+function resize(){ input.style.height = "auto"; input.style.height = Math.min(input.scrollHeight,160)+"px"; }
+function update(){
+  const n = input.value.length;
+  count.textContent = n + " / 1000"; count.className = n >= 950 ? "over" : "";
+  send.disabled = busy || !input.value.trim();
+}
+input.addEventListener("input", () => { resize(); update(); });
+input.addEventListener("keydown", e => { if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); ask(input.value); } });
+send.onclick = () => ask(input.value);
+$("newChat").onclick = () => {
+  if(busy) return;
+  col.innerHTML = `<section class="welcome" id="welcome"><h2>What would you like to understand?</h2><p>Ask about a condition, symptom, medicine, or test. Each answer is built from fresh web results and organised into considerations and options you can take to your doctor.</p></section>`;
+  input.focus();
+};
+update(); input.focus();
+</script>
+</body>
+</html>

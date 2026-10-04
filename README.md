@@ -31,6 +31,10 @@ The backend URL is set at the top of the script in `index.html`:
 const API_URL = "http://localhost:8000/api/v1/chat";
 ```
 
+## Demo.mp4
+
+<video src="Demo.mp4" width="320" height="240" controls></video>
+
 ## Disclaimer
 
 General information only. Not medical advice.

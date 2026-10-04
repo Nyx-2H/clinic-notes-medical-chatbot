@@ -1,0 +1,21 @@
+# Secrets
+.env
+.env.*
+!.env.example
+_env
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# Editors and OS
+.idea/
+.vscode/
+Thumbs.db
+*.log

@@ -33,7 +33,7 @@ const API_URL = "http://localhost:8000/api/v1/chat";
 
 ## Demo.mp4
 
-<video src="Demo.mp4" width="320" height="240" controls></video>
+[![Demo.mp4](Demo.mp4)]
 
 ## Disclaimer
 
